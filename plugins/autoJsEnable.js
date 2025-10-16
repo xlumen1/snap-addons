@@ -1,0 +1,1 @@
+console.log("Auto JS Enable plugin loaded");
