@@ -2,9 +2,20 @@ var browser = require("webextension-polyfill");
 
 (async () => {
   const plugins = await browser.runtime.sendMessage({ type: "get_plugins" });
-
-  for (const [name, enabled] of Object.entries(plugins)) {
-    if (enabled) injectPlugin(name);
+  // Inject Preloader (persistent)
+  (() => {
+    const url = browser.runtime.getURL("plugins/preloader.js");
+    const script = document.createElement("script");
+    fetch(url)
+      .then(response => response.text())
+      .then(scriptRaw => {
+        script.innerHTML = scriptRaw;
+        script.id = "snap-addons-preloader";
+        document.documentElement.appendChild(script);
+      });
+  })();
+  for (p in plugins) {
+    if (plugins[p].enabled) injectPlugin(p);
   }
 })();
 
@@ -17,7 +28,11 @@ function injectPlugin(name) {
     .then(response => response.text())
     .then(scriptRaw => {
       script.innerHTML = scriptRaw;
+      script.id = `snap-addons-plugin-${name}`;
       document.documentElement.appendChild(script);
-      script.onload = () => script.remove();
+      script.onload = () => {
+        script.remove();
+        document.getElementById("snap-addons-preloader").remove();
+      };
     });
 }

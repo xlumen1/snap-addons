@@ -1,3 +1,5 @@
+var browser = require("webextension-polyfill");
+
 document.getElementById('settingsButton').addEventListener('click', () => {
     window.open(browser.runtime.getURL('options.html'));
 });
@@ -12,14 +14,14 @@ document.getElementById('settingsButton').addEventListener('click', () => {
     div.className = 'plugin';
 
     const label = document.createElement('label');
-    label.textContent = info.description;
+    label.textContent = info.shortName || name;
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = info.enabled;
     checkbox.addEventListener('change', () => {
       info.enabled = checkbox.checked;
-      browser.storage.local.set({ plugins });
+      browser.runtime.sendMessage({ type: "set_plugin_state", pluginId: name, enabled: info.enabled });
     });
 
     label.prepend(checkbox);
