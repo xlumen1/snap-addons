@@ -6,9 +6,9 @@ module.exports = {
 
   entry: {
     // Inject webextension-polyfill automatically into each script
-    background: ["webextension-polyfill", "./src/background.js"],
-    content: ["webextension-polyfill", "./src/content.js"],
-    popup: ["webextension-polyfill", "./src/popup.js"],
+    background: "./src/background.js",
+    content: "./src/content.js",
+    popup: "./src/popup.js"
   },
 
   output: {
@@ -16,25 +16,6 @@ module.exports = {
     filename: "[name].js",
     clean: true, // optional: clear dist/ before each build
   },
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "string-replace-loader",
-            options: {
-              search: /require\(["']webextension-polyfill["']\);?/g,
-              replace: "",
-            },
-          },
-        ],
-      },
-    ],
-  },
-
 
   resolve: {
     fallback: {
@@ -51,6 +32,7 @@ module.exports = {
         { from: "html" },
         { from: "css" },
         { from: "plugins", to: "plugins" },
+        { from: "node_modules/webextension-polyfill/dist/browser-polyfill.js", to: "webextension-polyfill.js" },
       ],
     }),
   ],

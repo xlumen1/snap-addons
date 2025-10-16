@@ -11,7 +11,13 @@ var browser = require("webextension-polyfill");
 function injectPlugin(name) {
   const url = browser.runtime.getURL(`plugins/${name}.js`);
   const script = document.createElement("script");
-  script.src = url;
-  document.documentElement.appendChild(script);
-  script.onload = () => script.remove();
+  // Set script to just contain the plugin source to avoid CORS issues
+  // Why is there a network error when fetching? Could it be because it needs the extension id in the URL?
+  fetch(url)
+    .then(response => response.text())
+    .then(scriptRaw => {
+      script.innerHTML = scriptRaw;
+      document.documentElement.appendChild(script);
+      script.onload = () => script.remove();
+    });
 }

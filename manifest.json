@@ -15,18 +15,25 @@
     ],
 
     "background": {
-        "service_worker": "background.js"
+        "scripts": ["webextension-polyfill.js", "background.js"]
     },
 
     "content_scripts": [
         {
             "matches": ["*://snap.berkeley.edu/*"],
-            "js": ["browser-polyfill.js", "content.js"]
+            "js": ["webextension-polyfill.js", "content.js"]
         }
     ],
 
     "action": {
         "default_title": "Snap! Addons",
         "default_popup": "popup.html"
-    }
+    },
+
+    "web_accessible_resources": [
+        {
+            "resources": ["plugins/*.js"],
+            "matches": ["*://snap.berkeley.edu/*"]
+        }
+    ]
 }

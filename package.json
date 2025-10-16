@@ -14,7 +14,7 @@
     "webpack-cli": "^6.0.1"
   },
   "scripts": {
-    "build": "rm -r dist/*; webpack; cd dist; web-ext build; cd ..; mv dist/web-ext-artifacts/*.zip snap-addons.zip",
+    "build": "webpack; cd dist; web-ext build; cd ..; mv dist/web-ext-artifacts/*.zip snap-addons.zip",
     "run": "web-ext run --source-dir=dist"
   }
 }
